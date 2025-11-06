@@ -1,5 +1,6 @@
 """
 Module E - Proposal & Document Automation API Endpoints
+Generates proposals for LCR & Company's civil engineering services
 """
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
@@ -33,10 +34,10 @@ router = APIRouter()
 
 
 class PricingRequest(BaseModel):
-    """Request for pricing calculation"""
-    modules: List[str] = Field(
+    """Request for civil engineering services pricing calculation"""
+    services: List[str] = Field(
         ...,
-        description="List of module IDs (e.g., ['A', 'C', 'D'])"
+        description="List of service IDs (e.g., ['DIA', 'GRADING', 'REVIEW'])"
     )
     discount_percent: float = Field(
         0,
@@ -53,9 +54,9 @@ class PricingRequest(BaseModel):
 
 
 class PricingResponse(BaseModel):
-    """Response from pricing calculation"""
+    """Response from civil engineering services pricing calculation"""
     subtotal: float
-    bundle_discount_percent: float
+    package_discount_percent: float
     total_discount_percent: float
     discount_amount: float
     discounted_subtotal: float
@@ -63,33 +64,37 @@ class PricingResponse(BaseModel):
     total: float
     estimated_days: int
     estimated_completion: str
-    modules: List[Dict]
+    services: List[Dict]
 
 
 class ProposalRequest(BaseModel):
-    """Request to generate proposal"""
+    """Request to generate civil engineering services proposal"""
     client_name: str = Field(..., description="Client organization name")
     client_contact: str = Field(..., description="Primary contact person")
     client_email: str = Field(..., description="Contact email")
     project_name: str = Field(..., description="Project name")
     project_location: str = Field(..., description="Project location")
     project_description: str = Field(..., description="Brief project description")
-    modules_requested: List[str] = Field(..., description="Module IDs to include")
+    jurisdiction: str = Field("Lafayette UDC", description="Regulatory jurisdiction")
+    project_type: str = Field("Commercial", description="Project type")
+    services_requested: List[str] = Field(..., description="Service IDs to include")
+    project_area_acres: Optional[float] = Field(None, description="Project area in acres")
+    num_plan_sheets: Optional[int] = Field(None, description="Number of plan sheets")
     custom_scope: List[str] = Field(default=[], description="Custom scope items")
     discount_percent: float = Field(0, ge=0, le=100)
     rush_fee_percent: float = Field(0, ge=0, le=100)
     proposal_valid_days: int = Field(30, description="Days proposal is valid")
     prepared_by: str = Field("Grant Dozier, PE")
-    company: str = Field("LCR", description="LCR, Dozier, or Both")
+    company: str = Field("LCR", description="LCR & Company")
 
 
 class ProposalResponse(BaseModel):
-    """Response from proposal generation"""
+    """Response from civil engineering proposal generation"""
     proposal_id: str
     proposal_path: str
     total_price: float
     estimated_days: int
-    modules_included: List[str]
+    services_included: List[str]
     client_name: str
 
 
@@ -135,19 +140,23 @@ class CoverLetterResponse(BaseModel):
 @router.post("/calculate-pricing", response_model=PricingResponse)
 async def calculate_proposal_pricing(request: PricingRequest):
     """
-    Calculate pricing for automation module combination.
+    Calculate pricing for civil engineering services combination.
 
-    **Standard Module Pricing:**
-    - Module A: $7,500 - Automated Area Calculation Engine
-    - Module B: $8,000 - UDC & DOTD Specification Extraction
-    - Module C: $12,000 - DIA Report Generator
-    - Module D: $9,500 - Plan Review & QA Automation
-    - Module E: $5,000 - Proposal & Document Automation
+    **Standard Service Pricing:**
+    - DIA: $4,500 - Drainage Impact Analysis Report
+    - GRADING: $3,500 - Grading Plan Review & Design
+    - DETENTION: $5,000 - Detention Pond Design & Analysis
+    - TOC: $1,500 - Time of Concentration Analysis
+    - REVIEW: $2,500 - Plan Review & QA Services
+    - SURVEY: $2,000 - Survey Coordination & Review
+    - SUBMITTAL: $1,200 - Submittal Package Preparation
+    - CONSTRUCTION: $1,800 - Construction Observation Services
+    - STORMWATER: $3,800 - Stormwater Management Plan
 
-    **Bundle Discounts:**
-    - 3 modules: 5% discount
-    - 4 modules: 10% discount
-    - All 5 modules: 15% discount
+    **Package Discounts:**
+    - 3+ services: 5% discount
+    - 5+ services: 10% discount
+    - 7+ services: 15% discount
 
     **Custom Discounts:**
     - Additional discounts can be applied for repeat clients or special circumstances
@@ -158,7 +167,7 @@ async def calculate_proposal_pricing(request: PricingRequest):
     **Example:**
     ```json
     {
-      "modules": ["A", "C"],
+      "services": ["DIA", "GRADING"],
       "discount_percent": 0,
       "rush_fee_percent": 0
     }
@@ -167,39 +176,40 @@ async def calculate_proposal_pricing(request: PricingRequest):
     **Result:**
     ```json
     {
-      "subtotal": 19500.00,
-      "total": 19500.00,
-      "estimated_days": 25,
+      "subtotal": 8000.00,
+      "total": 8000.00,
+      "estimated_days": 18,
       "estimated_completion": "December 15, 2024"
     }
     ```
     """
     try:
-        logger.info(f"Calculating pricing for modules: {request.modules}")
+        logger.info(f"Calculating pricing for services: {request.services}")
 
         calculator = PricingCalculator()
         result = calculator.calculate_total(
-            modules=request.modules,
+            services=request.services,
             discount_percent=Decimal(str(request.discount_percent)),
             rush_fee_percent=Decimal(str(request.rush_fee_percent))
         )
 
-        # Convert module objects to dicts for response
-        modules_dict = [
+        # Convert service objects to dicts for response
+        services_dict = [
             {
-                "module_id": m.module_id,
-                "module_name": m.module_name,
-                "description": m.description,
-                "base_price": float(m.base_price),
-                "time_estimate_days": m.time_estimate_days,
-                "deliverables": m.deliverables,
+                "service_id": s.service_id,
+                "service_name": s.service_name,
+                "description": s.description,
+                "base_price": float(s.base_price),
+                "time_estimate_days": s.time_estimate_days,
+                "deliverables": s.deliverables,
+                "unit": s.unit,
             }
-            for m in result["modules"]
+            for s in result["services"]
         ]
 
         return PricingResponse(
             subtotal=result["subtotal"],
-            bundle_discount_percent=result["bundle_discount_percent"],
+            package_discount_percent=result["package_discount_percent"],
             total_discount_percent=result["total_discount_percent"],
             discount_amount=result["discount_amount"],
             discounted_subtotal=result["discounted_subtotal"],
@@ -207,7 +217,7 @@ async def calculate_proposal_pricing(request: PricingRequest):
             total=result["total"],
             estimated_days=result["estimated_days"],
             estimated_completion=result["estimated_completion"],
-            modules=modules_dict,
+            services=services_dict,
         )
 
     except Exception as e:
@@ -222,37 +232,38 @@ async def generate_proposal(
     db: Session = Depends(get_db)
 ):
     """
-    Generate professional branded proposal document.
+    Generate professional civil engineering services proposal document.
 
     **Proposal Includes:**
-    1. **Cover Page**: Company branding, project info, validity dates
-    2. **Project Overview**: Description and about our services
-    3. **Scope of Services**: Detailed module descriptions and deliverables
-    4. **Pricing**: Itemized pricing with discounts and totals
-    5. **Timeline**: Estimated duration and milestones
-    6. **Terms & Conditions**: Standard terms for automation services
-    7. **Signature Page**: Acceptance signatures
+    1. **Cover Page**: LCR & Company branding, project info, validity dates
+    2. **Project Overview**: Description, jurisdiction, project type
+    3. **Scope of Services**: Detailed service descriptions and deliverables
+    4. **Professional Fee Estimate**: Itemized pricing with discounts and totals
+    5. **Project Timeline**: Estimated duration and milestones
+    6. **Terms & Conditions**: Standard terms for professional engineering services
+    7. **Signature Page**: Client acceptance signatures
 
     **Output Format:**
     - Word (.docx) - Editable, professional formatting
     - Client-ready for immediate delivery
 
     **Use Cases:**
-    - New client proposals
-    - Project quotes
-    - Service package offerings
+    - Drainage engineering service proposals
+    - Plan review service quotes
+    - Multi-service project packages
 
     **Example:**
     ```json
     {
-      "client_name": "Acadiana High School",
+      "client_name": "Lafayette Parish School Board",
       "client_contact": "John Smith",
-      "client_email": "john@school.edu",
-      "project_name": "Campus Drainage Improvements",
+      "client_email": "john@lpss.edu",
+      "project_name": "L.J. Alleman Middle School Drainage Improvements",
       "project_location": "Lafayette, LA",
-      "project_description": "Comprehensive drainage analysis and plan review",
-      "modules_requested": ["A", "C", "D"],
-      "company": "LCR"
+      "project_description": "Comprehensive drainage analysis and grading plan review",
+      "jurisdiction": "Lafayette UDC",
+      "project_type": "Educational",
+      "services_requested": ["DIA", "GRADING", "REVIEW"]
     }
     ```
     """
@@ -267,7 +278,11 @@ async def generate_proposal(
             project_name=request.project_name,
             project_location=request.project_location,
             project_description=request.project_description,
-            modules_requested=request.modules_requested,
+            jurisdiction=request.jurisdiction,
+            project_type=request.project_type,
+            services_requested=request.services_requested,
+            project_area_acres=Decimal(str(request.project_area_acres)) if request.project_area_acres else None,
+            num_plan_sheets=request.num_plan_sheets,
             custom_scope=request.custom_scope,
             discount_percent=Decimal(str(request.discount_percent)),
             rush_fee_percent=Decimal(str(request.rush_fee_percent)),
@@ -283,7 +298,7 @@ async def generate_proposal(
         # Calculate pricing for response
         calculator = PricingCalculator()
         pricing = calculator.calculate_total(
-            modules=request.modules_requested,
+            services=request.services_requested,
             discount_percent=Decimal(str(request.discount_percent)),
             rush_fee_percent=Decimal(str(request.rush_fee_percent))
         )
@@ -296,7 +311,7 @@ async def generate_proposal(
             status="completed",
             parameters={
                 "client_name": request.client_name,
-                "modules": request.modules_requested,
+                "services": request.services_requested,
                 "total_price": pricing["total"],
             },
             results_summary={
@@ -315,7 +330,7 @@ async def generate_proposal(
             proposal_path=proposal_path,
             total_price=pricing["total"],
             estimated_days=pricing["estimated_days"],
-            modules_included=request.modules_requested,
+            services_included=request.services_requested,
             client_name=request.client_name,
         )
 
@@ -508,50 +523,52 @@ async def generate_transmittal_form(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/modules/pricing")
-async def get_module_pricing():
+@router.get("/services/pricing")
+async def get_service_pricing():
     """
-    Get pricing information for all automation modules.
+    Get pricing information for all civil engineering services.
 
-    Returns detailed information about each module including:
-    - Module ID and name
+    Returns detailed information about each service including:
+    - Service ID and name
     - Description
     - Base price
     - Estimated time
     - Deliverables list
+    - Pricing unit
 
     **Use For:**
     - Building custom pricing calculators
-    - Displaying module options to clients
+    - Displaying service options to clients
     - Creating custom proposals
     """
     try:
         calculator = PricingCalculator()
 
-        modules = [
+        services = [
             {
-                "module_id": m.module_id,
-                "module_name": m.module_name,
-                "description": m.description,
-                "base_price": float(m.base_price),
-                "time_estimate_days": m.time_estimate_days,
-                "deliverables": m.deliverables,
+                "service_id": s.service_id,
+                "service_name": s.service_name,
+                "description": s.description,
+                "base_price": float(s.base_price),
+                "time_estimate_days": s.time_estimate_days,
+                "deliverables": s.deliverables,
+                "unit": s.unit,
             }
-            for m in calculator.MODULE_PRICING.values()
+            for s in calculator.SERVICE_PRICING.values()
         ]
 
         return {
-            "modules": modules,
-            "bundle_discounts": {
-                "3_modules": "5%",
-                "4_modules": "10%",
-                "5_modules": "15%",
+            "services": services,
+            "package_discounts": {
+                "3_services": "5%",
+                "5_services": "10%",
+                "7_services": "15%",
             },
-            "total_modules": len(modules),
+            "total_services": len(services),
         }
 
     except Exception as e:
-        logger.error(f"Error getting module pricing: {e}")
+        logger.error(f"Error getting service pricing: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

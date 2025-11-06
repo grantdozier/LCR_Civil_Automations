@@ -2,26 +2,34 @@
 Module E - Proposal & Document Automation
 
 This module provides automated generation of professional proposals, cover letters,
-and submittal documents with consistent branding for LCR & Company and Dozier Tech.
+and submittal documents for LCR & Company's civil engineering clients.
+
+Purpose:
+Automates creation of client proposals, submittal letters, and internal summaries
+based on pre-approved LCR templates for civil engineering services.
 
 Components:
-- Proposal Generator: Auto-generate branded proposals with scope, timeline, pricing
-- Cover Letter Generator: Professional cover letters for submittals
-- Document Templates: Reusable templates for consistent formatting
-- Branding Manager: Merge LCR & Dozier Tech branding assets
+- Proposal Generator: Auto-generate branded proposals for civil engineering services
+- Cover Letter Generator: Professional cover letters for drainage submittals
+- Document Templates: Reusable LCR-branded templates
+- Branding Manager: LCR & Company branding assets
 
 Features:
-- Automated pricing calculation based on module selection
-- Timeline estimation from project scope
-- Professional formatting with company branding
-- Customizable templates for different proposal types
-- Bulk document generation for multiple projects
+- Automated pricing calculation for civil engineering services
+- Timeline estimation from service scope
+- Professional formatting with LCR branding
+- Customizable templates for different service types
+- Integration with project metadata and technical inputs (C-values, rainfall data)
 
-Proposal Types:
-- Drainage Analysis Proposals (Module C)
-- Full Civil Engineering Services (Modules A-C)
-- Plan Review & QA Services (Module D)
-- Custom combinations
+Service Types:
+- Drainage Impact Analysis (DIA)
+- Grading Plan Review & Design
+- Detention Pond Design
+- Stormwater Management Plans
+- Plan Review & QA Services
+- Survey Coordination
+- Construction Observation
+- Custom service combinations
 """
 
 from services.module_e.proposal_generator import (
