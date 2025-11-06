@@ -18,30 +18,35 @@ export default function Home() {
             title="Area Calculation"
             description="Automated drainage area calculation with weighted C-values"
             color="bg-blue-500"
+            href="/module-a"
           />
           <ModuleCard
             letter="B"
             title="Spec Extraction"
-            description="UDC & DOTD specification extraction with LangChain"
+            description="UDC & DOTD specification extraction with AI"
             color="bg-green-500"
+            href="/module-b"
           />
           <ModuleCard
             letter="C"
             title="DIA Report Generator"
             description="Complete drainage impact analysis reports (Q=CiA)"
             color="bg-purple-500"
+            href="/module-c"
           />
           <ModuleCard
             letter="D"
             title="Plan Review QA"
             description="Automated plan set compliance checking"
             color="bg-orange-500"
+            href="/module-d"
           />
           <ModuleCard
             letter="E"
-            title="Document Automation"
+            title="Proposal Generator"
             description="Proposal and submittal document generation"
             color="bg-pink-500"
+            href="/module-e"
           />
           <div className="bg-white rounded-lg shadow-md p-6 border-2 border-slate-200 flex flex-col items-center justify-center">
             <p className="text-2xl font-bold text-slate-700">5 Modules</p>
@@ -82,19 +87,29 @@ export default function Home() {
   )
 }
 
-function ModuleCard({ letter, title, description, color }: {
+function ModuleCard({ letter, title, description, color, href }: {
   letter: string
   title: string
   description: string
   color: string
+  href: string
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border-2 border-slate-200 hover:border-slate-300 transition">
+    <a
+      href={href}
+      className="bg-white rounded-lg shadow-md p-6 border-2 border-slate-200 hover:border-slate-400 transition-all hover:shadow-lg block"
+    >
       <div className={`w-12 h-12 ${color} rounded-full flex items-center justify-center mb-4`}>
         <span className="text-white text-2xl font-bold">{letter}</span>
       </div>
       <h3 className="text-lg font-semibold text-slate-800 mb-2">{title}</h3>
       <p className="text-slate-600 text-sm">{description}</p>
-    </div>
+      <div className="mt-4 text-blue-600 text-sm font-semibold flex items-center gap-1">
+        Launch Module
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
+    </a>
   )
 }
