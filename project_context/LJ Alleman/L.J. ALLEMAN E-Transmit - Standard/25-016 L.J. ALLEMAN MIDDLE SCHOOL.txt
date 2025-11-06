@@ -1,0 +1,264 @@
+Transmittal Report:
+Created by AutoCAD eTransmit Monday, October 27, 2025, 11:59 AM.
+
+Drawing Sheet Set:
+
+This is a transmittal based on drawing sheets from the sheet set:
+	25-016 L.J. ALLEMAN MIDDLE SCHOOL.
+
+Sheets:
+C-3 PROPOSED SITE PLAN
+C-4 OVERALL GRADING & DRAINAGE PLAN
+C-5 PROPOSED GRADING & DRAINAGE PLAN (1 OF 4)
+C-6 PROPOSED GRADING & DRAINAGE PLAN (2 OF 4)
+C-7 PROPOSED GRADING & DRAINAGE PLAN (3 OF 4)
+C-8 PROPOSED GRADING & DRAINAGE PLAN (4 OF 4)
+C-9 OVERALL PAVING PLAN
+C-10 PROPOSED PAVING PLAN (1 OF 4)
+C-11 PROPOSED PAVING PLAN (2 OF 4)
+C-12 PROPOSED PAVING PLAN (3 OF 4)
+C-13 PROPOSED PAVING PLAN (4 OF 4)
+C-14 PROPOSED UTILITY PLAN
+C-15 PROPOSED EROSION CONTROL PLAN
+C-16 GRADING & DRAINAGE NOTES & DETAILS
+C-17 PAVING NOTES & DETAILS (1 OF 2)
+C-18 PAVING NOTES & DETAILS (2 OF 2)
+C-19 EROSION CONTROL DETAILS
+
+
+Files:
+
+
+Root Drawings:	Design\25-016 C-BASE.dwg
+	Design\25-016 C-UTIL.dwg
+	Design\25-016 C-DETAILS.dwg
+	Design\25-016 C-EROSION.dwg
+	Design\25-016 C-GRAD.dwg
+	Design\25-016 C-PAVE.dwg
+
+Sheet Set Data File:
+	25-016 L.J.dst
+
+Sheet Template Files:
+	SheetSets\Architectural Imperial.dwt
+
+AutoCAD Drawing (External) References:
+	Existing\25-016 C-TOPO.dwg
+
+PNG File References:
+	DETAILS\CB-01.png
+	Prouett Templates\PAE Logo (Color).png
+	DETAILS\PIPE BEDDING.png
+
+JPG File References:
+	prouett templates\Logo Underline.jpg
+	prouett templates\Phase Block.jpg
+	Textures\Concrete.Cast-In-Place.Flat.Grey.1.jpg
+	Textures\Sitework.Paving - Surfacing.Asphalt.1.jpg
+	Textures\Sitework.Planting.Grass.Short.jpg
+	Textures\Sitework.Planting.Grass.Thick.jpg
+	Textures\Sitework.Planting.Gravel.Crushed.jpg
+	Textures\Sitework.Planting.Gravel.Mixed.jpg
+	Textures\Sitework.Planting.Soil.jpg
+	LCR & Co. Logo\FINAL.jpg
+
+AutoCAD Color-dependent Plot Style Table File References:
+	PlotCfgs\Full Scale Mono.ctb
+	PlotCfgs\Half Scale Mono.ctb
+
+AutoCAD Plotter Configuration File References:
+	PlotCfgs\AutoCAD PDF (General Documentation).pc3
+
+The following files were excluded from the transmittal:
+	acad.fmp
+	Fonts\simplex.shx
+	Fonts\romans.shx
+	Fonts\ltypeshp.shx
+	@Arial Unicode MS.(shx,ttf)
+	Fonts\calibri.ttf
+	SJBSHAPES.(shx,ttf)
+	SJBSHAPES.(shx,ttf)
+	LGH SHAPE.(shx,ttf)
+	dgnlstyle-Survey_linestyles.(shx,ttf)
+	FEATURE_CONTROL_SYMBOLS.(shx,ttf)
+	HUB-LD.(shx,ttf)
+	Fonts\romanc.shx
+	Fonts\sanssbo_.ttf
+	Fonts\arial.ttf
+	cbc-ld.(shx,ttf)
+	WOODS.(shx,ttf)
+	SWAMP.(shx,ttf)
+	MARSH.(shx,ttf)
+	CULVERT.(shx,ttf)
+	LEVEE.(shx,ttf)
+	TREES.(shx,ttf)
+	HEDGE.(shx,ttf)
+	FENCE.(shx,ttf)
+	GATE.(shx,ttf)
+	CASING.(shx,ttf)
+	TRACKS.(shx,ttf)
+	Fonts\AECCLAND.shx
+	Fonts\SCRIPTBL.TTF
+	Fonts\romant__.ttf
+	velvetnh.(shx,ttf)
+	ENGINEERING.(shx,ttf)
+	Fonts\times.ttf
+	Fonts\ARIALN.TTF
+	Fonts\tahoma.ttf
+	Fonts\arialbd.ttf
+	Fonts\romand.shx
+	PDF Images\13 - C1.3 Grading & Drainage5cd23879.png
+	2023-12-04 Republic - Colonial Ortho (HiRes)\2023-12-04 Republic - Colonial Ortho (HiRes).jp2
+	LCR Stamp\4257 ROBICHAUX.tiff
+	LJ Alleman\c9805b06-e69a-436d-9fd1-6b34f4aab461.jpg
+	LCR & Co. Logo\FINAL.jpg
+	PDF Images\TRENCH DRAIN SPECS23390c0b.png
+	PDF Images\TRENCH DRAIN SPECS926cfc18.png
+	Textures\Sitework.Paving - Surfacing.Asphalt.jpg
+	REV Jan 2025\24-116 IFP DRAWINGS 2025-1-31 - revised.pdf
+	PE Stamp\Bex Stamp.pdf
+	Drainage\cc-01_2024 (1).pdf
+	Vermilion\cid0E034C9E-6E66-4CB8-955E-6459D497D531.pdf
+	Drainage\DI DETAILS from HP MH DETAILS PACKET - 03.01.2023-4.pdf
+	Drainage\DI SPECS from HP MH DETAILS PACKET - 03.01.2023-3.pdf
+	Drawing Templates\FF STAMP.pdf
+	Drainage\FRAME COVER DETAIL from HP MH DETAILS PACKET - 03.01.2023-5.pdf
+	Drainage\GRATE DETAIL from HP MH DETAILS PACKET - 03.01.2023-2.pdf
+	Drainage\INSERT A TEE DETAIL from HP MH DETAILS PACKET - 03.01.2023-6.pdf
+	1. CUSTOMER INFO & DOCS\LJA - Preliminary Site Plan (09.03.2025).pdf
+	Outside Subconsultants\Proposed Architectural Building Plan.pdf
+	Outside Subconsultants\Proposed Architectural Site Plan.pdf
+	7. As Built Drawings\RECORDED- FINAL-PLAT.pdf
+	IFC Drawings\Scan2025-03-17_102015.pdf
+	Drainage\TRENCH DRAIN DETAIL.pdf
+	Drainage\TRENCH DRAIN SPECS.pdf
+	7. As Built Drawings\LJAMS Cafeteria Sheet MS1.1.pdf
+	LJAMS-Site Concept.pdf
+	7. As Built Drawings\LMAMS Cafeteria Sheet FP1.1.pdf
+	SheetSets\Architectural Imperial.dwt
+	Fonts\txt.shx
+	Vermilion\cid0E034C9E-6E66-4CB8-955E-6459D497D531.pdf
+	JUDICE MIDDLE FLIGHT\4dcf5fd4-85e9-4254-a892-f95bdb337e0f.jpg
+	JUDICE MIDDLE FLIGHT\4dcf5fd4-85e9-4254-a892-f95bdb337e0f.jpg
+
+The following files could not be located:
+	@Arial Unicode MS.(shx,ttf)
+	SJBSHAPES.(shx,ttf)
+	SJBSHAPES.(shx,ttf)
+	LGH SHAPE.(shx,ttf)
+	dgnlstyle-Survey_linestyles.(shx,ttf)
+	FEATURE_CONTROL_SYMBOLS.(shx,ttf)
+	HUB-LD.(shx,ttf)
+	cbc-ld.(shx,ttf)
+	WOODS.(shx,ttf)
+	SWAMP.(shx,ttf)
+	MARSH.(shx,ttf)
+	CULVERT.(shx,ttf)
+	LEVEE.(shx,ttf)
+	TREES.(shx,ttf)
+	HEDGE.(shx,ttf)
+	FENCE.(shx,ttf)
+	GATE.(shx,ttf)
+	CASING.(shx,ttf)
+	TRACKS.(shx,ttf)
+	velvetnh.(shx,ttf)
+	ENGINEERING.(shx,ttf)
+	PDF Images\13 - C1.3 Grading & Drainage5cd23879.png
+	2023-12-04 Republic - Colonial Ortho (HiRes)\2023-12-04 Republic - Colonial Ortho (HiRes).jp2
+	LCR Stamp\4257 ROBICHAUX.tiff
+	LJ Alleman\c9805b06-e69a-436d-9fd1-6b34f4aab461.jpg
+	LCR & Co. Logo\FINAL.jpg
+	PDF Images\TRENCH DRAIN SPECS23390c0b.png
+	PDF Images\TRENCH DRAIN SPECS926cfc18.png
+	Textures\Sitework.Paving - Surfacing.Asphalt.jpg
+	PE Stamp\Bex Stamp.pdf
+	Drainage\cc-01_2024 (1).pdf
+	Vermilion\cid0E034C9E-6E66-4CB8-955E-6459D497D531.pdf
+	Drainage\DI DETAILS from HP MH DETAILS PACKET - 03.01.2023-4.pdf
+	Drainage\DI SPECS from HP MH DETAILS PACKET - 03.01.2023-3.pdf
+	Drawing Templates\FF STAMP.pdf
+	Drainage\FRAME COVER DETAIL from HP MH DETAILS PACKET - 03.01.2023-5.pdf
+	Drainage\GRATE DETAIL from HP MH DETAILS PACKET - 03.01.2023-2.pdf
+	Drainage\INSERT A TEE DETAIL from HP MH DETAILS PACKET - 03.01.2023-6.pdf
+	IFC Drawings\Scan2025-03-17_102015.pdf
+	Drainage\TRENCH DRAIN DETAIL.pdf
+	Drainage\TRENCH DRAIN SPECS.pdf
+	LJAMS-Site Concept.pdf
+	Vermilion\cid0E034C9E-6E66-4CB8-955E-6459D497D531.pdf
+	JUDICE MIDDLE FLIGHT\4dcf5fd4-85e9-4254-a892-f95bdb337e0f.jpg
+	JUDICE MIDDLE FLIGHT\4dcf5fd4-85e9-4254-a892-f95bdb337e0f.jpg
+
+
+Notes for distribution:
+
+.DWG external reference files:
+External reference (xref) paths may be present.  Make sure these paths work or that the root drawing is using the correct references.
+eTransmit does not include files required by xrefs unless they are also required by the root drawing.  In particular, plot style tables and overlay xrefs that are not used by the root drawing are omitted
+
+Raster image files:
+Paths may be present on references to raster images.  Make sure these paths work or that the root drawing is using the correct references.
+
+PDF Underlay files:
+Paths may be present on references to PDF underlay files.  Make sure these paths work or that the root drawing is u sing the correct references.
+
+.PC3 printer configuration files:
+Please copy these files to the AutoCAD Printer Configuration Search Path directory.
+
+.CTB/.STB plot style tables:
+Please copy these files to the AutoCAD Plot Style Table Search Path directory.
+
+Material texture files:
+Please copy these files to the AutoCAD Texture Maps Search Path directory.
+
+The AutoCAD variable FONTALT was set to:
+C:\Users\Trey Bex\AppData\Roaming\Autodesk\C3D 2025\enu\support\simplex.shx
+Please make sure that the FONTALT variable is set to this file or an equivalent before opening any drawings.  All text styles with missing fonts are automatically set to this font.
+
+
+
+*** Map 2007 Data and Cache files ***
+
+The drawing 'C:\Users\Trey Bex\LCR & Company, LLC Dropbox\LCR & Company, LLC Team Folder\2. Projects\Engineering\25-016 LJ Alleman School DIA\2. CAD\Base Files\Design\25-016 C-BASE.dwg' refers to a cache manifest XML file, zero or more cache files (.GWS) as well as raw data files.
+Please ensure the manifest XML file and cache files are unzipped to the drawing directory or your current MapCache directory.
+You may also need to update the cache manifest XML file to point to the unzipped location of the data files.
+
+
+
+*** Map 2007 Data and Cache files ***
+
+The drawing 'C:\Users\Trey Bex\LCR & Company, LLC Dropbox\LCR & Company, LLC Team Folder\2. Projects\Engineering\25-016 LJ Alleman School DIA\2. CAD\Base Files\Design\25-016 C-UTIL.dwg' refers to a cache manifest XML file, zero or more cache files (.GWS) as well as raw data files.
+Please ensure the manifest XML file and cache files are unzipped to the drawing directory or your current MapCache directory.
+You may also need to update the cache manifest XML file to point to the unzipped location of the data files.
+
+
+
+*** Map 2007 Data and Cache files ***
+
+The drawing 'C:\Users\Trey Bex\LCR & Company, LLC Dropbox\LCR & Company, LLC Team Folder\2. Projects\Engineering\25-016 LJ Alleman School DIA\2. CAD\Base Files\Design\25-016 C-DETAILS.dwg' refers to a cache manifest XML file, zero or more cache files (.GWS) as well as raw data files.
+Please ensure the manifest XML file and cache files are unzipped to the drawing directory or your current MapCache directory.
+You may also need to update the cache manifest XML file to point to the unzipped location of the data files.
+
+
+
+*** Map 2007 Data and Cache files ***
+
+The drawing 'C:\Users\Trey Bex\LCR & Company, LLC Dropbox\LCR & Company, LLC Team Folder\2. Projects\Engineering\25-016 LJ Alleman School DIA\2. CAD\Base Files\Design\25-016 C-EROSION.dwg' refers to a cache manifest XML file, zero or more cache files (.GWS) as well as raw data files.
+Please ensure the manifest XML file and cache files are unzipped to the drawing directory or your current MapCache directory.
+You may also need to update the cache manifest XML file to point to the unzipped location of the data files.
+
+
+
+*** Map 2007 Data and Cache files ***
+
+The drawing 'C:\Users\Trey Bex\LCR & Company, LLC Dropbox\LCR & Company, LLC Team Folder\2. Projects\Engineering\25-016 LJ Alleman School DIA\2. CAD\Base Files\Design\25-016 C-GRAD.dwg' refers to a cache manifest XML file, zero or more cache files (.GWS) as well as raw data files.
+Please ensure the manifest XML file and cache files are unzipped to the drawing directory or your current MapCache directory.
+You may also need to update the cache manifest XML file to point to the unzipped location of the data files.
+
+
+
+*** Map 2007 Data and Cache files ***
+
+The drawing 'C:\Users\Trey Bex\LCR & Company, LLC Dropbox\LCR & Company, LLC Team Folder\2. Projects\Engineering\25-016 LJ Alleman School DIA\2. CAD\Base Files\Design\25-016 C-PAVE.dwg' refers to a cache manifest XML file, zero or more cache files (.GWS) as well as raw data files.
+Please ensure the manifest XML file and cache files are unzipped to the drawing directory or your current MapCache directory.
+You may also need to update the cache manifest XML file to point to the unzipped location of the data files.
+
