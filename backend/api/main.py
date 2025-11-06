@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from backend.core import settings, get_db
-from backend.api.routes import area_calculation, spec_extraction
+from backend.api.routes import area_calculation, spec_extraction, dia_report
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -76,8 +76,13 @@ app.include_router(
     tags=["Module B - Specification Extraction"],
 )
 
+app.include_router(
+    dia_report.router,
+    prefix=f"{settings.API_PREFIX}/dia-report",
+    tags=["Module C - DIA Report Generator"],
+)
+
 # TODO: Add routers for remaining modules as they are built
-# app.include_router(dia_report.router, prefix=f"{settings.API_PREFIX}/dia-report", tags=["Module C"])
 # app.include_router(qa_review.router, prefix=f"{settings.API_PREFIX}/qa-review", tags=["Module D"])
 # app.include_router(proposals.router, prefix=f"{settings.API_PREFIX}/proposals", tags=["Module E"])
 
