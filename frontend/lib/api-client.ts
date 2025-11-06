@@ -203,6 +203,128 @@ export const diaReportApi = {
 };
 
 // ============================================================================
+// Module D - Plan Review & QA Automation
+// ============================================================================
+
+export const qaReviewApi = {
+  async uploadPlanSet(file: File, projectId?: string) {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (projectId) formData.append('project_id', projectId);
+
+    return fetchWithError(`${API_BASE_URL}/qa-review/upload-plan-set`, {
+      method: 'POST',
+      body: formData,
+    });
+  },
+
+  async checkCompliance(data: {
+    project_id?: string;
+    pdf_path: string;
+    sheet_numbers?: string[];
+    custom_rules?: any[];
+  }) {
+    return fetchWithError(`${API_BASE_URL}/qa-review/check-compliance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  },
+
+  async generateQAReport(data: {
+    project_id?: string;
+    pdf_path: string;
+    include_detailed_results?: boolean;
+    output_format?: string;
+  }) {
+    return fetchWithError(`${API_BASE_URL}/qa-review/generate-qa-report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  },
+
+  async getRunResults(runId: string) {
+    return fetchWithError(`${API_BASE_URL}/qa-review/run/${runId}/results`);
+  },
+};
+
+// ============================================================================
+// Module E - Proposal & Document Automation
+// ============================================================================
+
+export const proposalsApi = {
+  async calculatePricing(data: {
+    services: string[];
+    discount_percent?: number;
+    rush_fee_percent?: number;
+  }) {
+    return fetchWithError(`${API_BASE_URL}/proposals/calculate-pricing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  },
+
+  async generateProposal(data: {
+    client_name: string;
+    client_contact: string;
+    client_email: string;
+    project_name: string;
+    project_location: string;
+    project_description: string;
+    jurisdiction?: string;
+    project_type?: string;
+    services_requested: string[];
+    project_area_acres?: number;
+    num_plan_sheets?: number;
+    custom_scope?: string[];
+    discount_percent?: number;
+    rush_fee_percent?: number;
+    proposal_valid_days?: number;
+    prepared_by?: string;
+    company?: string;
+  }) {
+    return fetchWithError(`${API_BASE_URL}/proposals/generate-proposal`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  },
+
+  async generateCoverLetter(data: {
+    project_name: string;
+    project_number: string;
+    client_name: string;
+    client_address: string;
+    client_contact: string;
+    subject: string;
+    documents: Array<{
+      document_type: string;
+      description: string;
+      filename: string;
+      page_count?: number;
+      revision?: string;
+    }>;
+    purpose?: string;
+    special_instructions?: string;
+    prepared_by?: string;
+    company?: string;
+    letter_type?: string;
+  }) {
+    return fetchWithError(`${API_BASE_URL}/proposals/generate-cover-letter`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  },
+
+  async getServicePricing() {
+    return fetchWithError(`${API_BASE_URL}/proposals/services/pricing`);
+  },
+};
+
+// ============================================================================
 // Projects API (for all modules)
 // ============================================================================
 
