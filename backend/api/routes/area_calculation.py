@@ -9,9 +9,9 @@ from pathlib import Path
 import tempfile
 import logging
 
-from backend.core import get_db, settings
-from backend.models import Project, Drawing, DrainageArea
-from backend.services.module_a import (
+from core import get_db, settings
+from models import Project, Drawing, DrainageArea
+from services.module_a import (
     SurveyCSVParser,
     AreaCalculator,
     WeightedCValueCalculator,

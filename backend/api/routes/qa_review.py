@@ -11,9 +11,9 @@ import logging
 import uuid
 import shutil
 
-from backend.core import get_db, settings
-from backend.models import Project, Run
-from backend.services.module_d import (
+from core import get_db, settings
+from models import Project, Run
+from services.module_d import (
     PlanExtractor,
     SheetMetadata,
     ComplianceChecker,

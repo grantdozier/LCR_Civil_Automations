@@ -11,9 +11,9 @@ from decimal import Decimal
 import logging
 import uuid
 
-from backend.core import get_db, settings
-from backend.models import Project, Run
-from backend.services.module_e import (
+from core import get_db, settings
+from models import Project, Run
+from services.module_e import (
     ProposalGenerator,
     ProposalData,
     PricingCalculator,

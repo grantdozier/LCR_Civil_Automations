@@ -30,15 +30,15 @@ Sheet Types Supported:
 - C-11 through C-18: Additional detail and profile sheets
 """
 
-from backend.services.module_d.plan_extractor import PlanExtractor, SheetMetadata
-from backend.services.module_d.compliance_checker import (
+from services.module_d.plan_extractor import PlanExtractor, SheetMetadata
+from services.module_d.compliance_checker import (
     ComplianceChecker,
     ValidationRule,
     ComplianceResult,
     Severity,
     RequirementCategory,
 )
-from backend.services.module_d.qa_report_generator import QAReportGenerator
+from services.module_d.qa_report_generator import QAReportGenerator
 
 __all__ = [
     "PlanExtractor",

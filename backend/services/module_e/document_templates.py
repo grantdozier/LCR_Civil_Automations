@@ -415,7 +415,7 @@ class DocumentBatcher:
         Returns:
             List of paths to generated files
         """
-        from backend.services.module_e.proposal_generator import (
+        from services.module_e.proposal_generator import (
             ProposalGenerator,
             ProposalData
         )
@@ -449,7 +449,7 @@ class DocumentBatcher:
         Returns:
             List of paths to generated files
         """
-        from backend.services.module_e.cover_letter_generator import (
+        from services.module_e.cover_letter_generator import (
             CoverLetterGenerator,
             SubmittalPackage
         )

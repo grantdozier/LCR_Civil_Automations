@@ -8,7 +8,7 @@ from enum import Enum
 import re
 import logging
 
-from backend.services.module_d.plan_extractor import SheetMetadata
+from services.module_d.plan_extractor import SheetMetadata
 
 logger = logging.getLogger(__name__)
 

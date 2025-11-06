@@ -9,9 +9,9 @@ from pathlib import Path
 import tempfile
 import logging
 
-from backend.core import get_db, settings
-from backend.models import Spec
-from backend.services.module_b import (
+from core import get_db, settings
+from models import Spec
+from services.module_b import (
     PDFParser,
     SpecificationExtractor,
     NOAAAtlas14Parser,

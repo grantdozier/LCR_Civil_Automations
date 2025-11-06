@@ -5,8 +5,8 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from backend.core import settings, get_db
-from backend.api.routes import area_calculation, spec_extraction, dia_report, qa_review, proposals
+from core import settings, get_db
+from api.routes import area_calculation, spec_extraction, dia_report, qa_review, proposals
 
 # Initialize FastAPI app
 app = FastAPI(

@@ -10,15 +10,15 @@ from datetime import datetime
 import logging
 import uuid
 
-from backend.core import get_db, settings
-from backend.models import Project, DrainageArea, Run, Result
-from backend.services.module_c import (
+from core import get_db, settings
+from models import Project, DrainageArea, Run, Result
+from services.module_c import (
     RationalMethodCalculator,
     TimeOfConcentration,
     DIAReportGenerator,
     ExhibitGenerator,
 )
-from backend.services.module_b import NOAAAtlas14Parser
+from services.module_b import NOAAAtlas14Parser
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

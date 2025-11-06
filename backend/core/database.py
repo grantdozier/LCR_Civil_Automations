@@ -44,7 +44,7 @@ def init_db():
     Called on application startup.
     """
     # Import all models here to ensure they are registered
-    from backend.models import (
+    from models import (
         Project,
         Drawing,
         DrainageArea,

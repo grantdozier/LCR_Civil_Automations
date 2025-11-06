@@ -24,17 +24,17 @@ Proposal Types:
 - Custom combinations
 """
 
-from backend.services.module_e.proposal_generator import (
+from services.module_e.proposal_generator import (
     ProposalGenerator,
     ProposalData,
     PricingCalculator,
 )
-from backend.services.module_e.cover_letter_generator import (
+from services.module_e.cover_letter_generator import (
     CoverLetterGenerator,
     SubmittalPackage,
     SubmittalDocument,
 )
-from backend.services.module_e.document_templates import (
+from services.module_e.document_templates import (
     TemplateManager,
     BrandingAssets,
 )

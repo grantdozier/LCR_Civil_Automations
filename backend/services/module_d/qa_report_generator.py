@@ -13,12 +13,12 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
-from backend.services.module_d.compliance_checker import (
+from services.module_d.compliance_checker import (
     ComplianceResult,
     Severity,
     ComplianceChecker,
 )
-from backend.services.module_d.plan_extractor import SheetMetadata
+from services.module_d.plan_extractor import SheetMetadata
 
 logger = logging.getLogger(__name__)
 

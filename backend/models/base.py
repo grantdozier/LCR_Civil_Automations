@@ -20,7 +20,7 @@ from sqlalchemy.sql import func
 from geoalchemy2 import Geometry
 import uuid
 
-from backend.core.database import Base
+from core.database import Base
 
 
 class Project(Base):
@@ -38,7 +38,7 @@ class Project(Base):
     status = Column(String(50), default="active")
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
 
     # Relationships
     drawings = relationship("Drawing", back_populates="project", cascade="all, delete-orphan")
@@ -60,7 +60,7 @@ class Drawing(Base):
     file_type = Column(String(50))
     sheet_type = Column(String(50))
     uploaded_at = Column(TIMESTAMP, server_default=func.now())
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
 
     # Relationships
     project = relationship("Project", back_populates="drawings")
@@ -132,7 +132,7 @@ class Run(Base):
     # User tracking
     created_by = Column(String(100))
 
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
 
     # Relationships
     project = relationship("Project", back_populates="runs")
@@ -227,7 +227,7 @@ class Spec(Base):
     extraction_confidence = Column(Numeric(3, 2))
     verified = Column(Boolean, default=False)
 
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
 
 
 class QAResult(Base):
@@ -261,7 +261,7 @@ class QAResult(Base):
     extracted_text = Column(Text)
 
     created_at = Column(TIMESTAMP, server_default=func.now())
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
 
     # Relationships
     run = relationship("Run", back_populates="qa_results")
@@ -304,7 +304,7 @@ class Proposal(Base):
 
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-    metadata = Column(JSONB)
+    extra_data = Column(JSONB)
 
     # Relationships
     project = relationship("Project", back_populates="proposals")
