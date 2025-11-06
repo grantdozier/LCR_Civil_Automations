@@ -6,12 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input, TextArea } from '@/components/ui/input';
 import { Alert } from '@/components/ui/alert';
 
-const MODULE_PRICING = {
-  A: { name: 'Area Calculation', price: 8500, days: 5 },
-  B: { name: 'Spec Extraction', price: 7500, days: 4 },
-  C: { name: 'DIA Report Generator', price: 12000, days: 7 },
-  D: { name: 'Plan Review QA', price: 9000, days: 5 },
-  E: { name: 'Document Automation', price: 5000, days: 3 },
+const SERVICE_PRICING = {
+  DIA: { name: 'Drainage Impact Analysis Report', price: 4500, days: 10, description: 'Complete 58+ page DIA with Rational Method' },
+  GRADING: { name: 'Grading Plan Review & Design', price: 3500, days: 8, description: 'Professional grading plan development and review' },
+  DETENTION: { name: 'Detention Pond Design', price: 5000, days: 12, description: 'Stormwater detention facility design' },
+  TOC: { name: 'Time of Concentration Analysis', price: 1500, days: 3, description: 'TOC calculations using multiple methods' },
+  REVIEW: { name: 'Plan Review & QA Services', price: 2500, days: 5, description: 'Comprehensive plan review for compliance' },
+  SURVEY: { name: 'Survey Coordination', price: 2000, days: 4, description: 'Survey data review and coordination' },
+  SUBMITTAL: { name: 'Submittal Package Prep', price: 1200, days: 2, description: 'Professional submittal package assembly' },
+  CONSTRUCTION: { name: 'Construction Observation', price: 1800, days: 1, description: 'On-site construction observation (per visit)' },
+  STORMWATER: { name: 'Stormwater Management Plan', price: 3800, days: 9, description: 'SWMP with BMP design' },
 };
 
 export default function ModuleEPage() {
@@ -21,18 +25,20 @@ export default function ModuleEPage() {
   const [projectName, setProjectName] = useState('');
   const [projectLocation, setProjectLocation] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
-  const [selectedModules, setSelectedModules] = useState<string[]>([]);
+  const [jurisdiction, setJurisdiction] = useState('Lafayette UDC');
+  const [projectType, setProjectType] = useState('Commercial');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [discount, setDiscount] = useState('0');
   const [rushFee, setRushFee] = useState('0');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const toggleModule = (module: string) => {
-    if (selectedModules.includes(module)) {
-      setSelectedModules(selectedModules.filter((m) => m !== module));
+  const toggleService = (service: string) => {
+    if (selectedServices.includes(service)) {
+      setSelectedServices(selectedServices.filter((s) => s !== service));
     } else {
-      setSelectedModules([...selectedModules, module]);
+      setSelectedServices([...selectedServices, service]);
     }
   };
 
@@ -40,18 +46,18 @@ export default function ModuleEPage() {
     let subtotal = 0;
     let totalDays = 0;
 
-    selectedModules.forEach((mod) => {
-      subtotal += MODULE_PRICING[mod as keyof typeof MODULE_PRICING].price;
-      totalDays += MODULE_PRICING[mod as keyof typeof MODULE_PRICING].days;
+    selectedServices.forEach((service) => {
+      subtotal += SERVICE_PRICING[service as keyof typeof SERVICE_PRICING].price;
+      totalDays += SERVICE_PRICING[service as keyof typeof SERVICE_PRICING].days;
     });
 
-    // Bundle discount
-    let bundleDiscount = 0;
-    if (selectedModules.length >= 5) bundleDiscount = 15;
-    else if (selectedModules.length >= 3) bundleDiscount = 10;
-    else if (selectedModules.length >= 2) bundleDiscount = 5;
+    // Package discount
+    let packageDiscount = 0;
+    if (selectedServices.length >= 7) packageDiscount = 15;
+    else if (selectedServices.length >= 5) packageDiscount = 10;
+    else if (selectedServices.length >= 3) packageDiscount = 5;
 
-    const totalDiscount = bundleDiscount + parseFloat(discount);
+    const totalDiscount = packageDiscount + parseFloat(discount);
     const discountAmount = (subtotal * totalDiscount) / 100;
     const discountedSubtotal = subtotal - discountAmount;
     const rushFeeAmount = (discountedSubtotal * parseFloat(rushFee)) / 100;
@@ -59,7 +65,7 @@ export default function ModuleEPage() {
 
     return {
       subtotal,
-      bundleDiscount,
+      packageDiscount,
       totalDiscount,
       discountAmount,
       discountedSubtotal,
@@ -70,8 +76,8 @@ export default function ModuleEPage() {
   };
 
   const handleGenerate = async () => {
-    if (!clientName || !projectName || selectedModules.length === 0) {
-      setError('Please fill in all required fields and select at least one module');
+    if (!clientName || !projectName || selectedServices.length === 0) {
+      setError('Please fill in all required fields and select at least one service');
       return;
     }
 
@@ -83,26 +89,26 @@ export default function ModuleEPage() {
       const pricing = calculatePricing();
       setResult({
         proposal_id: 'PROP-2024-001',
-        proposal_path: '/outputs/proposals/Proposal_ABC_Development_2024.docx',
+        proposal_path: '/outputs/proposals/Proposal_LCR_Client_2024.docx',
         total_price: pricing.total,
         estimated_days: pricing.totalDays,
-        modules_included: selectedModules,
+        services_included: selectedServices,
         client_name: clientName,
       });
       setLoading(false);
     }, 2000);
   };
 
-  const pricing = selectedModules.length > 0 ? calculatePricing() : null;
+  const pricing = selectedServices.length > 0 ? calculatePricing() : null;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-slate-900 mb-2">
-          Module E: Proposal Generator
+          Module E: Civil Engineering Proposal Generator
         </h1>
         <p className="text-lg text-slate-600">
-          Automated proposal and document generation for drainage automation services
+          Generate professional proposals for LCR & Company's civil engineering and drainage services
         </p>
       </div>
 
@@ -115,7 +121,7 @@ export default function ModuleEPage() {
                 label="Client Name"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                placeholder="e.g., ABC Development LLC"
+                placeholder="e.g., Lafayette Parish School Board"
                 required
               />
               <Input
@@ -132,7 +138,7 @@ export default function ModuleEPage() {
               type="email"
               value={clientEmail}
               onChange={(e) => setClientEmail(e.target.value)}
-              placeholder="e.g., john.smith@abcdev.com"
+              placeholder="e.g., john.smith@lpss.edu"
               required
             />
 
@@ -141,7 +147,7 @@ export default function ModuleEPage() {
                 label="Project Name"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
-                placeholder="e.g., Smith Residential Development"
+                placeholder="e.g., L.J. Alleman Middle School Drainage"
                 required
               />
               <Input
@@ -149,6 +155,21 @@ export default function ModuleEPage() {
                 value={projectLocation}
                 onChange={(e) => setProjectLocation(e.target.value)}
                 placeholder="e.g., Lafayette, LA"
+              />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <Input
+                label="Jurisdiction"
+                value={jurisdiction}
+                onChange={(e) => setJurisdiction(e.target.value)}
+                placeholder="e.g., Lafayette UDC, DOTD"
+              />
+              <Input
+                label="Project Type"
+                value={projectType}
+                onChange={(e) => setProjectType(e.target.value)}
+                placeholder="e.g., Educational, Commercial, Residential"
               />
             </div>
 
@@ -162,38 +183,39 @@ export default function ModuleEPage() {
           </div>
         </Card>
 
-        {/* Module Selection */}
-        <Card title="Select Modules" description="Choose automation services to include">
+        {/* Service Selection */}
+        <Card title="Select Services" description="Choose civil engineering services to include">
           <div className="space-y-3">
-            {Object.entries(MODULE_PRICING).map(([key, module]) => (
+            {Object.entries(SERVICE_PRICING).map(([key, service]) => (
               <div
                 key={key}
                 className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                  selectedModules.includes(key)
-                    ? 'bg-pink-50 border-pink-500'
+                  selectedServices.includes(key)
+                    ? 'bg-blue-50 border-blue-500'
                     : 'bg-slate-50 border-slate-200 hover:border-slate-300'
                 }`}
-                onClick={() => toggleModule(key)}
+                onClick={() => toggleService(key)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
-                      checked={selectedModules.includes(key)}
-                      onChange={() => toggleModule(key)}
-                      className="w-5 h-5 text-pink-600 rounded focus:ring-pink-500"
+                      checked={selectedServices.includes(key)}
+                      onChange={() => toggleService(key)}
+                      className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
                       onClick={(e) => e.stopPropagation()}
                     />
                     <div>
                       <p className="font-semibold text-slate-900">
-                        Module {key}: {module.name}
+                        {service.name}
                       </p>
-                      <p className="text-sm text-slate-600">{module.days} days estimated</p>
+                      <p className="text-sm text-slate-600">{service.description}</p>
+                      <p className="text-xs text-slate-500 mt-1">{service.days} days estimated</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-slate-900">
-                      ${module.price.toLocaleString()}
+                      ${service.price.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -230,17 +252,17 @@ export default function ModuleEPage() {
 
         {/* Pricing Summary */}
         {pricing && (
-          <Card title="Pricing Summary" description="Proposal pricing breakdown">
+          <Card title="Professional Fee Estimate" description="Pricing breakdown for selected services">
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-600">Subtotal ({selectedModules.length} modules):</span>
+                <span className="text-slate-600">Subtotal ({selectedServices.length} services):</span>
                 <span className="font-semibold">${pricing.subtotal.toLocaleString()}</span>
               </div>
 
-              {pricing.bundleDiscount > 0 && (
+              {pricing.packageDiscount > 0 && (
                 <div className="flex justify-between text-sm text-green-600">
-                  <span>Bundle Discount ({pricing.bundleDiscount}%):</span>
-                  <span>-${((pricing.subtotal * pricing.bundleDiscount) / 100).toLocaleString()}</span>
+                  <span>Package Discount ({pricing.packageDiscount}%):</span>
+                  <span>-${((pricing.subtotal * pricing.packageDiscount) / 100).toLocaleString()}</span>
                 </div>
               )}
 
@@ -270,13 +292,16 @@ export default function ModuleEPage() {
               )}
 
               <div className="flex justify-between text-lg font-bold border-t-2 pt-3">
-                <span>Total:</span>
-                <span className="text-pink-600">${pricing.total.toLocaleString()}</span>
+                <span>Total Professional Fee:</span>
+                <span className="text-blue-600">${pricing.total.toLocaleString()}</span>
               </div>
 
-              <div className="bg-slate-50 rounded-lg p-3 text-sm">
-                <p className="text-slate-600">
+              <div className="bg-blue-50 rounded-lg p-3 text-sm border border-blue-200">
+                <p className="text-slate-700">
                   <strong>Estimated Timeline:</strong> {pricing.totalDays} business days
+                </p>
+                <p className="text-slate-600 text-xs mt-1">
+                  Timeline assumes timely receipt of all necessary data and client approvals
                 </p>
               </div>
             </div>
@@ -289,10 +314,10 @@ export default function ModuleEPage() {
             variant="primary"
             onClick={handleGenerate}
             isLoading={loading}
-            disabled={selectedModules.length === 0}
+            disabled={selectedServices.length === 0}
             className="flex-1"
           >
-            Generate Proposal
+            Generate Civil Engineering Proposal
           </Button>
         </div>
 
@@ -304,14 +329,14 @@ export default function ModuleEPage() {
 
         {/* Result */}
         {result && (
-          <Card title="Proposal Generated" description="Your proposal is ready">
+          <Card title="Proposal Generated" description="Your civil engineering proposal is ready">
             <div className="space-y-4">
               <Alert variant="success">
-                <strong>Proposal generated successfully!</strong>
+                <strong>Professional services proposal generated successfully!</strong>
                 <p className="mt-2">Proposal ID: {result.proposal_id}</p>
               </Alert>
 
-              <div className="bg-slate-50 rounded-lg p-4">
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <h4 className="font-semibold text-slate-900 mb-2">Proposal Details</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -319,23 +344,24 @@ export default function ModuleEPage() {
                     <span className="font-semibold">{result.client_name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-600">Total Price:</span>
+                    <span className="text-slate-600">Total Professional Fee:</span>
                     <span className="font-semibold">${result.total_price.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-600">Estimated Days:</span>
-                    <span className="font-semibold">{result.estimated_days} days</span>
+                    <span className="text-slate-600">Estimated Timeline:</span>
+                    <span className="font-semibold">{result.estimated_days} business days</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-600">Modules:</span>
-                    <span className="font-semibold">{result.modules_included.join(', ')}</span>
+                    <span className="text-slate-600">Services Included:</span>
+                    <span className="font-semibold">{result.services_included.join(', ')}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <Button variant="primary">Download Proposal (DOCX)</Button>
                 <Button variant="secondary">Download Cover Letter</Button>
+                <Button variant="outline">Preview PDF</Button>
                 <Button variant="outline">Email to Client</Button>
               </div>
             </div>
