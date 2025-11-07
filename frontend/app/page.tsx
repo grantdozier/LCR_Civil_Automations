@@ -48,12 +48,6 @@ export default function Home() {
             color="bg-pink-500"
             href="/module-e"
           />
-          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-slate-200 flex flex-col items-center justify-center">
-            <p className="text-2xl font-bold text-slate-700">5 Modules</p>
-            <p className="text-slate-500">Full Automation</p>
-            <div className="mt-4 text-4xl font-bold text-blue-600">$42K</div>
-            <p className="text-sm text-slate-500">Total Contract Value</p>
-          </div>
         </div>
 
         <div className="mt-16 space-y-4">
