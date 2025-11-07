@@ -29,7 +29,7 @@ CREATE TABLE projects (
     status VARCHAR(50) DEFAULT 'active', -- active, completed, archived
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    metadata JSONB -- Flexible field for additional project-specific data
+    extra_data JSONB -- Flexible field for additional project-specific data
 );
 
 CREATE INDEX idx_projects_status ON projects(status);
@@ -48,7 +48,7 @@ CREATE TABLE drawings (
     file_type VARCHAR(50), -- e.g., "DWG", "DXF", "PDF"
     sheet_type VARCHAR(50), -- e.g., "C-1", "C-2", ..., "C-18" for plan review
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    metadata JSONB
+    extra_data JSONB
 );
 
 CREATE INDEX idx_drawings_project_id ON drawings(project_id);
@@ -117,7 +117,7 @@ CREATE TABLE runs (
     -- User tracking (future enhancement)
     created_by VARCHAR(100),
 
-    metadata JSONB
+    extra_data JSONB
 );
 
 CREATE INDEX idx_runs_project_id ON runs(project_id);
@@ -210,7 +210,7 @@ CREATE TABLE specs (
     extraction_confidence NUMERIC(3, 2), -- 0.00 to 1.00 (from LangChain)
     verified BOOLEAN DEFAULT FALSE,
 
-    metadata JSONB
+    extra_data JSONB
 );
 
 CREATE INDEX idx_specs_jurisdiction ON specs(jurisdiction);
@@ -248,7 +248,7 @@ CREATE TABLE qa_results (
     extracted_text TEXT,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    metadata JSONB
+    extra_data JSONB
 );
 
 CREATE INDEX idx_qa_results_run_id ON qa_results(run_id);
@@ -290,7 +290,7 @@ CREATE TABLE proposals (
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    metadata JSONB
+    extra_data JSONB
 );
 
 CREATE INDEX idx_proposals_project_id ON proposals(project_id);
