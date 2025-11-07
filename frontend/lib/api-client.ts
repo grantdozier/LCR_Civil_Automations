@@ -147,6 +147,18 @@ export const specExtractionApi = {
 
     return fetchWithError(url.toString());
   },
+
+  async scrapeWebSources(sources?: string[], saveToDb = true) {
+    const url = new URL(`${API_BASE_URL}/spec-extraction/scrape-web-sources`);
+    if (sources && sources.length > 0) {
+      sources.forEach(source => url.searchParams.append('sources', source));
+    }
+    url.searchParams.append('save_to_db', String(saveToDb));
+
+    return fetchWithError(url.toString(), {
+      method: 'POST',
+    });
+  },
 };
 
 // ============================================================================

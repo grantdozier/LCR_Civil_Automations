@@ -8,10 +8,10 @@ import { FileUpload } from '@/components/ui/file-upload';
 import { Alert } from '@/components/ui/alert';
 import { specExtractionApi } from '@/lib/api-client';
 
-type Tab = 'pdf-extract' | 'search-specs' | 'c-values' | 'rainfall';
+type Tab = 'pdf-extract' | 'search-specs' | 'c-values' | 'rainfall' | 'web-scrape' | 'view-all';
 
 export default function ModuleBPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('pdf-extract');
+  const [activeTab, setActiveTab] = useState<Tab>('web-scrape');
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -24,11 +24,11 @@ export default function ModuleBPage() {
 
       {/* Tab Navigation */}
       <div className="flex gap-2 mb-6 border-b border-slate-200 overflow-x-auto">
-        <TabButton active={activeTab === 'pdf-extract'} onClick={() => setActiveTab('pdf-extract')}>
-          PDF Extraction
+        <TabButton active={activeTab === 'web-scrape'} onClick={() => setActiveTab('web-scrape')}>
+          🌐 Web Scraping
         </TabButton>
-        <TabButton active={activeTab === 'search-specs'} onClick={() => setActiveTab('search-specs')}>
-          Search Specs
+        <TabButton active={activeTab === 'view-all'} onClick={() => setActiveTab('view-all')}>
+          📊 View All Specs
         </TabButton>
         <TabButton active={activeTab === 'c-values'} onClick={() => setActiveTab('c-values')}>
           C-Values
@@ -36,9 +36,17 @@ export default function ModuleBPage() {
         <TabButton active={activeTab === 'rainfall'} onClick={() => setActiveTab('rainfall')}>
           Rainfall Data
         </TabButton>
+        <TabButton active={activeTab === 'pdf-extract'} onClick={() => setActiveTab('pdf-extract')}>
+          PDF Extraction
+        </TabButton>
+        <TabButton active={activeTab === 'search-specs'} onClick={() => setActiveTab('search-specs')}>
+          Search Specs
+        </TabButton>
       </div>
 
       {/* Tab Content */}
+      {activeTab === 'web-scrape' && <WebScraping />}
+      {activeTab === 'view-all' && <ViewAllSpecs />}
       {activeTab === 'pdf-extract' && <PDFExtraction />}
       {activeTab === 'search-specs' && <SearchSpecs />}
       {activeTab === 'c-values' && <CValues />}
@@ -65,6 +73,274 @@ function TabButton({
     >
       {children}
     </button>
+  );
+}
+
+// ============================================================================
+// Web Scraping
+// ============================================================================
+
+function WebScraping() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
+
+  const handleScrapeAll = async () => {
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const response = await specExtractionApi.scrapeWebSources();
+      setResult(response);
+    } catch (err: any) {
+      setError(err.message || 'Failed to scrape web sources');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      <Card
+        title="Web Scraping for Specifications"
+        description="Automatically scrape and populate specifications database from online sources"
+      >
+        <div className="space-y-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h4 className="font-semibold text-blue-900 mb-2">📚 Available Sources:</h4>
+            <ul className="space-y-2 text-sm text-blue-800">
+              <li>✅ <strong>Lafayette UDC</strong> - Runoff coefficients (C-values) for all land uses</li>
+              <li>✅ <strong>DOTD Manual</strong> - Louisiana DOT hydraulic design standards</li>
+              <li>✅ <strong>NOAA Atlas 14</strong> - Rainfall intensity data for Lafayette, LA</li>
+            </ul>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-white border-2 border-slate-200 rounded-lg p-4 text-center">
+              <p className="text-3xl font-bold text-green-600 mb-1">17</p>
+              <p className="text-sm text-slate-600">Lafayette UDC C-values</p>
+            </div>
+            <div className="bg-white border-2 border-slate-200 rounded-lg p-4 text-center">
+              <p className="text-3xl font-bold text-blue-600 mb-1">5</p>
+              <p className="text-sm text-slate-600">DOTD Specifications</p>
+            </div>
+            <div className="bg-white border-2 border-slate-200 rounded-lg p-4 text-center">
+              <p className="text-3xl font-bold text-purple-600 mb-1">40</p>
+              <p className="text-sm text-slate-600">NOAA Rainfall Data Points</p>
+            </div>
+          </div>
+
+          <Button
+            variant="primary"
+            onClick={handleScrapeAll}
+            isLoading={loading}
+            className="w-full"
+          >
+            🌐 Scrape All Sources and Populate Database
+          </Button>
+
+          {error && (
+            <Alert variant="error" onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          )}
+        </div>
+      </Card>
+
+      {result && (
+        <Card title="Scraping Results" description="Successfully scraped and saved specifications">
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-green-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-green-600 mb-1">Sources Scraped</p>
+                <p className="text-2xl font-bold text-green-900">{result.sources_scraped.length}</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-green-600 mb-1">Total Specifications</p>
+                <p className="text-2xl font-bold text-green-900">{result.total_specifications}</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-green-600 mb-1">New Records Saved</p>
+                <p className="text-2xl font-bold text-green-900">{result.new_records_saved}</p>
+              </div>
+            </div>
+
+            <Alert variant="success">
+              ✅ Successfully scraped {result.sources_scraped.join(', ')} and saved {result.new_records_saved} new specifications to database!
+            </Alert>
+
+            <div className="border-t pt-4">
+              <h4 className="font-semibold text-slate-900 mb-3">Scraped Data Summary</h4>
+              <div className="space-y-2">
+                {Object.entries(result.data).map(([source, specs]: [string, any]) => (
+                  <div key={source} className="bg-slate-50 rounded-lg p-3 flex justify-between items-center">
+                    <span className="font-medium text-slate-700 capitalize">{source.replace('_', ' ')}</span>
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      {specs.length} specs
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// View All Specifications
+// ============================================================================
+
+function ViewAllSpecs() {
+  const [loading, setLoading] = useState(false);
+  const [specs, setSpecs] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<string>('all');
+
+  useEffect(() => {
+    loadAllSpecs();
+  }, []);
+
+  const loadAllSpecs = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await specExtractionApi.searchSpecs({});
+      setSpecs(response);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load specifications');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredSpecs = filterType === 'all'
+    ? specs
+    : specs.filter(s => s.spec_type === filterType);
+
+  const specTypeCount = {
+    all: specs.length,
+    runoff_coefficient: specs.filter(s => s.spec_type === 'runoff_coefficient').length,
+    rainfall_intensity: specs.filter(s => s.spec_type === 'rainfall_intensity').length,
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-6">
+      <Card title="All Specifications Database" description={`Viewing ${filteredSpecs.length} specification(s)`}>
+        <div className="space-y-4">
+          {/* Stats */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 rounded-lg p-4 text-center cursor-pointer hover:bg-blue-100 transition" onClick={() => setFilterType('all')}>
+              <p className="text-sm text-blue-600 mb-1">Total Specifications</p>
+              <p className="text-3xl font-bold text-blue-900">{specTypeCount.all}</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4 text-center cursor-pointer hover:bg-green-100 transition" onClick={() => setFilterType('runoff_coefficient')}>
+              <p className="text-sm text-green-600 mb-1">C-Values</p>
+              <p className="text-3xl font-bold text-green-900">{specTypeCount.runoff_coefficient}</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4 text-center cursor-pointer hover:bg-purple-100 transition" onClick={() => setFilterType('rainfall_intensity')}>
+              <p className="text-sm text-purple-600 mb-1">Rainfall Data</p>
+              <p className="text-3xl font-bold text-purple-900">{specTypeCount.rainfall_intensity}</p>
+            </div>
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex gap-2">
+            <button
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filterType === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+              onClick={() => setFilterType('all')}
+            >
+              All ({specTypeCount.all})
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filterType === 'runoff_coefficient' ? 'bg-green-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+              onClick={() => setFilterType('runoff_coefficient')}
+            >
+              C-Values ({specTypeCount.runoff_coefficient})
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filterType === 'rainfall_intensity' ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+              onClick={() => setFilterType('rainfall_intensity')}
+            >
+              Rainfall Data ({specTypeCount.rainfall_intensity})
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-slate-600">Loading specifications...</p>
+            </div>
+          ) : error ? (
+            <Alert variant="error">{error}</Alert>
+          ) : filteredSpecs.length === 0 ? (
+            <Alert variant="warning">
+              No specifications found in database. Use the <strong>Web Scraping</strong> tab to populate the database.
+            </Alert>
+          ) : (
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {filteredSpecs.map((spec, i) => (
+                <div key={i} className="bg-slate-50 rounded-lg p-4 border border-slate-200 hover:border-slate-300 transition">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                        spec.spec_type === 'runoff_coefficient' ? 'bg-green-100 text-green-800' :
+                        spec.spec_type === 'rainfall_intensity' ? 'bg-purple-100 text-purple-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {spec.spec_type.replace('_', ' ').toUpperCase()}
+                      </span>
+                      {spec.verified && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                          ✓ Verified
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm text-slate-600 font-medium">{spec.jurisdiction}</span>
+                  </div>
+
+                  {spec.land_use_type && (
+                    <p className="font-semibold text-slate-900 mb-1">{spec.land_use_type}</p>
+                  )}
+
+                  {spec.c_value_recommended && (
+                    <p className="text-sm text-slate-600">
+                      <strong>C-Value:</strong> {spec.c_value_recommended.toFixed(2)}
+                      {spec.c_value_min && spec.c_value_max && (
+                        <span className="text-slate-500"> (Range: {spec.c_value_min.toFixed(2)} - {spec.c_value_max.toFixed(2)})</span>
+                      )}
+                    </p>
+                  )}
+
+                  {spec.intensity_in_per_hr && (
+                    <p className="text-sm text-slate-600">
+                      <strong>Intensity:</strong> {spec.intensity_in_per_hr.toFixed(2)} in/hr
+                      {spec.duration_minutes && spec.return_period_years && (
+                        <span className="text-slate-500"> ({spec.duration_minutes} min, {spec.return_period_years}-year storm)</span>
+                      )}
+                    </p>
+                  )}
+
+                  <p className="text-xs text-slate-500 mt-2">
+                    {spec.document_name} {spec.section_reference && `• ${spec.section_reference}`}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
   );
 }
 

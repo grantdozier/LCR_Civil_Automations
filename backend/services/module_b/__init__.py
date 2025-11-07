@@ -2,9 +2,11 @@
 from .pdf_parser import PDFParser
 from .spec_extractor import SpecificationExtractor
 from .noaa_parser import NOAAAtlas14Parser
+from .web_scraper import SpecificationWebScraper
 
 __all__ = [
     "PDFParser",
     "SpecificationExtractor",
     "NOAAAtlas14Parser",
+    "SpecificationWebScraper",
 ]

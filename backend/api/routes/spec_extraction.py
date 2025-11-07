@@ -15,6 +15,7 @@ from services.module_b import (
     PDFParser,
     SpecificationExtractor,
     NOAAAtlas14Parser,
+    SpecificationWebScraper,
 )
 
 logger = logging.getLogger(__name__)
@@ -406,4 +407,88 @@ async def get_c_values(
 
     except Exception as e:
         logger.error(f"Error getting C-values: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/scrape-web-sources")
+async def scrape_web_specifications(
+    sources: Optional[List[str]] = Query(None, description="Specific sources to scrape (lafayette_udc, dotd, noaa)"),
+    save_to_db: bool = Query(True, description="Save scraped data to database"),
+    db: Session = Depends(get_db)
+):
+    """
+    Scrape regulatory specifications from online sources.
+
+    **Supported sources:**
+    - lafayette_udc: Lafayette Unified Development Code C-values
+    - dotd: Louisiana DOTD Hydraulic Design Manual
+    - noaa: NOAA Atlas 14 rainfall data for Lafayette, LA
+
+    **Parameters:**
+    - sources: List of sources to scrape (default: all)
+    - save_to_db: Whether to save to database (default: True)
+
+    **Returns:**
+    - Scraped specifications by source
+    - Count of records saved to database
+    """
+    try:
+        scraper = SpecificationWebScraper()
+
+        # Get specifications from requested sources
+        if sources and len(sources) > 0:
+            scraped_data = {}
+            for source in sources:
+                if source == "lafayette_udc":
+                    scraped_data["lafayette_udc"] = scraper.scrape_lafayette_udc_specs()
+                elif source == "dotd":
+                    scraped_data["dotd"] = scraper.scrape_dotd_specs()
+                elif source == "noaa":
+                    scraped_data["noaa"] = scraper.scrape_noaa_rainfall_data()
+        else:
+            # Scrape all sources
+            scraped_data = scraper.scrape_all_sources()
+
+        # Count total specifications
+        total_specs = sum(len(specs) for specs in scraped_data.values())
+
+        # Save to database if requested
+        saved_count = 0
+        if save_to_db:
+            for source, specs in scraped_data.items():
+                for spec_data in specs:
+                    # Check if spec already exists
+                    existing = None
+                    if spec_data["spec_type"] == "runoff_coefficient":
+                        existing = db.query(Spec).filter(
+                            Spec.jurisdiction == spec_data["jurisdiction"],
+                            Spec.land_use_type == spec_data["land_use_type"],
+                            Spec.spec_type == "runoff_coefficient"
+                        ).first()
+                    elif spec_data["spec_type"] == "rainfall_intensity":
+                        existing = db.query(Spec).filter(
+                            Spec.jurisdiction == spec_data["jurisdiction"],
+                            Spec.duration_minutes == spec_data["duration_minutes"],
+                            Spec.return_period_years == spec_data["return_period_years"],
+                            Spec.spec_type == "rainfall_intensity"
+                        ).first()
+
+                    if not existing:
+                        spec = Spec(**spec_data)
+                        db.add(spec)
+                        saved_count += 1
+
+            db.commit()
+            logger.info(f"Saved {saved_count} new specifications to database")
+
+        return {
+            "status": "success",
+            "sources_scraped": list(scraped_data.keys()),
+            "total_specifications": total_specs,
+            "new_records_saved": saved_count,
+            "data": scraped_data,
+        }
+
+    except Exception as e:
+        logger.error(f"Error scraping web sources: {e}")
         raise HTTPException(status_code=500, detail=str(e))
