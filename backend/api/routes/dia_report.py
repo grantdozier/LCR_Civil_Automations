@@ -2,11 +2,12 @@
 Module C - DIA Report Generation API Endpoints
 """
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 import logging
 import uuid
 
@@ -436,6 +437,49 @@ async def generate_dia_report(
             run.status = "failed"
             run.error_message = str(e)
             db.commit()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/download/{filename}")
+async def download_report_file(filename: str):
+    """
+    Download a generated report file.
+
+    **Supported Files:**
+    - DIA Reports (DIA_Report_*.docx)
+    - Exhibits (Exhibit_*.docx)
+    - Any file in the outputs directory
+
+    **Example:**
+    ```
+    GET /api/v1/dia-report/download/DIA_Report_DEMO-20251112_20251112.docx
+    ```
+    """
+    try:
+        file_path = Path(settings.OUTPUT_DIR) / filename
+        
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail=f"File not found: {filename}")
+        
+        if not file_path.is_file():
+            raise HTTPException(status_code=400, detail=f"Not a file: {filename}")
+        
+        # Security check: ensure file is within OUTPUT_DIR
+        if not str(file_path.resolve()).startswith(str(Path(settings.OUTPUT_DIR).resolve())):
+            raise HTTPException(status_code=403, detail="Access denied")
+        
+        logger.info(f"Serving file for download: {filename}")
+        
+        return FileResponse(
+            path=str(file_path),
+            filename=filename,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error downloading file: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 

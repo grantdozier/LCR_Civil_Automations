@@ -68,11 +68,59 @@ export default function DemoPage() {
       addProgress(`Run ID: ${result.run_id}`);
       addProgress(`Total Results: ${result.total_results}`);
       addProgress(`Status: ${result.status}`);
+      
+      // Auto-download files
+      if (result.results_summary?.report_paths) {
+        addProgress('📥 Downloading generated files...');
+        await downloadGeneratedFiles(result.results_summary.report_paths);
+        addProgress('✓ All files downloaded to your computer!');
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to run DIA workflow');
       addProgress('✗ Error: ' + (err.message || 'Failed to run DIA workflow'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const downloadGeneratedFiles = async (reportPaths: any) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const files: string[] = [];
+    
+    if (reportPaths.main_report) {
+      files.push(reportPaths.main_report);
+    }
+    if (reportPaths.exhibits && Array.isArray(reportPaths.exhibits)) {
+      files.push(...reportPaths.exhibits);
+    }
+
+    for (const filePath of files) {
+      const filename = filePath.split('/').pop();
+      if (filename) {
+        try {
+          // NEXT_PUBLIC_API_URL already includes /api/v1, so just add the endpoint path
+          const downloadUrl = `${apiUrl}/dia-report/download/${filename}`;
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = filename;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          await new Promise(resolve => setTimeout(resolve, 500)); // Delay between downloads
+        } catch (err) {
+          console.error(`Failed to download ${filename}:`, err);
+        }
+      }
+    }
+  };
+
+  const downloadFile = async (filePath: string) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const filename = filePath.split('/').pop();
+    if (filename) {
+      const downloadUrl = `${apiUrl}/api/v1/dia-report/download/${filename}`;
+      window.open(downloadUrl, '_blank');
     }
   };
 
@@ -311,20 +359,50 @@ export default function DemoPage() {
             {/* Report Files */}
             {runData.results_summary.report_paths && (
               <div className="mt-6">
-                <h4 className="font-semibold text-slate-700 mb-3">Generated Files</h4>
+                <h4 className="font-semibold text-slate-700 mb-3">Generated Files (Downloaded to Your Computer)</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="p-3 bg-slate-50 rounded border border-slate-200">
-                    <p className="font-semibold text-slate-900">Main Report:</p>
-                    <p className="text-slate-600 text-xs font-mono break-all">
-                      {runData.results_summary.report_paths.main_report}
-                    </p>
+                  <div className="p-3 bg-green-50 rounded border border-green-200 hover:bg-green-100 transition cursor-pointer"
+                       onClick={() => downloadFile(runData.results_summary.report_paths.main_report)}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="font-semibold text-green-900">📄 Main Report:</p>
+                        <p className="text-green-700 text-xs font-mono break-all">
+                          {runData.results_summary.report_paths.main_report.split('/').pop()}
+                        </p>
+                      </div>
+                      <Button
+                        onClick={(e) => { e.stopPropagation(); downloadFile(runData.results_summary.report_paths.main_report); }}
+                        variant="secondary"
+                        className="ml-2 text-xs"
+                      >
+                        ⬇️ Download
+                      </Button>
+                    </div>
                   </div>
                   {runData.results_summary.report_paths.exhibits?.map((exhibit: string, idx: number) => (
-                    <div key={idx} className="p-3 bg-slate-50 rounded border border-slate-200">
-                      <p className="font-semibold text-slate-900">Exhibit {idx + 1}:</p>
-                      <p className="text-slate-600 text-xs font-mono break-all">{exhibit}</p>
+                    <div key={idx} className="p-3 bg-green-50 rounded border border-green-200 hover:bg-green-100 transition cursor-pointer"
+                         onClick={() => downloadFile(exhibit)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-semibold text-green-900">📊 Exhibit {idx + 1}:</p>
+                          <p className="text-green-700 text-xs font-mono break-all">{exhibit.split('/').pop()}</p>
+                        </div>
+                        <Button
+                          onClick={(e) => { e.stopPropagation(); downloadFile(exhibit); }}
+                          variant="secondary"
+                          className="ml-2 text-xs"
+                        >
+                          ⬇️ Download
+                        </Button>
+                      </div>
                     </div>
                   ))}
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+                  <p className="text-sm text-blue-800">
+                    💡 <strong>Tip:</strong> Files were automatically downloaded when the workflow completed. 
+                    Click any file above to download again.
+                  </p>
                 </div>
               </div>
             )}

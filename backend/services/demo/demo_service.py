@@ -7,9 +7,15 @@ from typing import Dict, Any, List
 from sqlalchemy.orm import Session
 from decimal import Decimal
 
+import logging
 from models.base import Project, DrainageArea, Run, Result
 from services.module_c.rational_method import RationalMethodCalculator, TimeOfConcentration
 from services.module_b.noaa_parser import NOAAAtlas14Parser
+from services.module_c.report_generator import DIAReportGenerator
+from services.module_c.exhibit_generator import ExhibitGenerator
+from core import settings
+
+logger = logging.getLogger(__name__)
 
 
 class DemoService:
@@ -279,6 +285,60 @@ class DemoService:
 
                 results_by_storm[storm_event] = storm_results
 
+            # Prepare data for report generation
+            project_data = {
+                "project_name": project.name,
+                "project_number": project.project_number,
+                "client_name": project.client_name,
+                "location": project.location,
+                "prepared_by": "LCR & Company",
+                "date": datetime.now().strftime("%B %d, %Y")
+            }
+
+            drainage_areas_data = [
+                {
+                    "area_label": da.area_label,
+                    "total_area_acres": float(da.total_area_acres),
+                    "impervious_area_acres": float(da.impervious_area_acres),
+                    "pervious_area_acres": float(da.pervious_area_acres),
+                    "weighted_c_value": float(da.weighted_c_value),
+                    "impervious_percentage": (
+                        float(da.impervious_area_acres) / float(da.total_area_acres) * 100
+                        if da.total_area_acres else 0
+                    ),
+                    "land_use_breakdown": da.land_use_breakdown or {}
+                }
+                for da in drainage_areas
+            ]
+
+            # Generate actual DIA report
+            logger.info(f"Generating DIA report for project {project.project_number}")
+            try:
+                report_gen = DIAReportGenerator(output_dir=settings.OUTPUT_DIR)
+                report_path = report_gen.generate_report(
+                    project_data=project_data,
+                    drainage_areas=drainage_areas_data,
+                    results=results_by_storm
+                )
+                logger.info(f"DIA report generated: {report_path}")
+            except Exception as e:
+                logger.error(f"Error generating DIA report: {e}", exc_info=True)
+                raise
+
+            # Generate exhibits
+            logger.info(f"Generating exhibits for project {project.project_number}")
+            try:
+                exhibit_gen = ExhibitGenerator(output_dir=settings.OUTPUT_DIR)
+                exhibit_paths = exhibit_gen.generate_all_exhibits(
+                    project_data=project_data,
+                    drainage_areas=drainage_areas_data,
+                    results=results_by_storm
+                )
+                logger.info(f"Generated {len(exhibit_paths)} exhibits")
+            except Exception as e:
+                logger.error(f"Error generating exhibits: {e}", exc_info=True)
+                raise
+
             # Update run status
             run.status = "completed"
             run.completed_at = datetime.now()
@@ -293,11 +353,8 @@ class DemoService:
                     "location": project.location
                 },
                 "report_paths": {
-                    "main_report": f"/app/outputs/DIA_Report_{project.project_number}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx",
-                    "exhibits": [
-                        f"/app/outputs/Exhibit_3A_{storm_events[0]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx",
-                        f"/app/outputs/Exhibit_3B_{storm_events[1] if len(storm_events) > 1 else storm_events[0]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
-                    ]
+                    "main_report": report_path,
+                    "exhibits": exhibit_paths
                 },
                 "is_demo": True,
                 "demo_note": "This is a demonstration run with sample data"

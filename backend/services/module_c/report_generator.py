@@ -347,7 +347,12 @@ Impervious Percentage: {da.get('impervious_percentage', 0):.1f}%
             # Land use breakdown if available
             if da.get('land_use_breakdown'):
                 self.document.add_paragraph("\nLand Use Breakdown:")
-                for land_use, percentage in da['land_use_breakdown'].items():
+                for land_use, data in da['land_use_breakdown'].items():
+                    # Handle both simple percentage values and nested dicts
+                    if isinstance(data, dict):
+                        percentage = data.get('percentage', 0)
+                    else:
+                        percentage = data
                     self.document.add_paragraph(
                         f"  • {land_use.title()}: {percentage:.1f}%",
                         style='List Bullet'
