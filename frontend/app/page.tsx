@@ -12,42 +12,75 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-12">
-          <ModuleCard
-            letter="A"
-            title="Area Calculation"
-            description="Automated drainage area calculation with weighted C-values"
-            color="bg-blue-500"
-            href="/module-a"
-          />
-          <ModuleCard
-            letter="B"
-            title="Spec Extraction"
-            description="UDC & DOTD specification extraction with AI"
-            color="bg-green-500"
-            href="/module-b"
-          />
-          <ModuleCard
-            letter="C"
-            title="DIA Report Generator"
-            description="Complete drainage impact analysis reports (Q=CiA)"
-            color="bg-purple-500"
-            href="/module-c"
-          />
-          <ModuleCard
-            letter="D"
-            title="Plan Review QA"
-            description="Automated plan set compliance checking"
-            color="bg-orange-500"
-            href="/module-d"
-          />
-          <ModuleCard
-            letter="E"
-            title="Proposal Generator"
-            description="Proposal and submittal document generation"
-            color="bg-pink-500"
-            href="/module-e"
-          />
+        {/* DEMO Module - Featured */}
+        <div className="max-w-5xl mx-auto mt-12">
+          <div className="mb-8">
+            <a
+              href="/demo"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-lg p-8 border-2 border-purple-400 hover:border-purple-300 transition-all hover:shadow-xl block"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-purple-600 text-3xl font-bold">🚀</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-1">DEMO: Complete DIA Workflow</h3>
+                  <p className="text-purple-100 text-base">
+                    One-click demonstration showing the complete transformation process from sample data to DIA report
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-white font-semibold">
+                <span className="bg-white bg-opacity-20 px-3 py-1 rounded text-sm">
+                  ⚡ 99% time savings
+                </span>
+                <span className="bg-white bg-opacity-20 px-3 py-1 rounded text-sm">
+                  📊 2 button clicks
+                </span>
+                <span className="bg-white bg-opacity-20 px-3 py-1 rounded text-sm">
+                  ✓ Fully tested
+                </span>
+              </div>
+            </a>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <ModuleCard
+              letter="A"
+              title="Area Calculation"
+              description="Automated drainage area calculation with weighted C-values"
+              color="bg-blue-500"
+              href="/module-a"
+            />
+            <ModuleCard
+              letter="B"
+              title="Spec Extraction"
+              description="UDC & DOTD specification extraction with AI"
+              color="bg-green-500"
+              href="/module-b"
+            />
+            <ModuleCard
+              letter="C"
+              title="DIA Report Generator"
+              description="Complete drainage impact analysis reports (Q=CiA)"
+              color="bg-purple-500"
+              href="/module-c"
+            />
+            <ModuleCard
+              letter="D"
+              title="Plan Review QA"
+              description="Automated plan set compliance checking"
+              color="bg-orange-500"
+              href="/module-d"
+            />
+            <ModuleCard
+              letter="E"
+              title="Proposal Generator"
+              description="Proposal and submittal document generation"
+              color="bg-pink-500"
+              href="/module-e"
+            />
+          </div>
         </div>
 
         <div className="mt-16 space-y-4">

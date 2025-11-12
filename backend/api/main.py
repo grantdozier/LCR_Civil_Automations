@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from core import settings, get_db
-from api.routes import area_calculation, spec_extraction, dia_report, qa_review, proposals
+from api.routes import area_calculation, spec_extraction, dia_report, qa_review, proposals, demo
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -48,6 +48,7 @@ async def root():
             "C": "Drainage Impact Analysis (DIA) Report Generator",
             "D": "Plan Review & QA Automation",
             "E": "Proposal & Document Automation",
+            "DEMO": "Complete DIA Workflow Demonstration",
         },
     }
 
@@ -92,6 +93,12 @@ app.include_router(
     proposals.router,
     prefix=f"{settings.API_PREFIX}/proposals",
     tags=["Module E - Proposal & Document Automation"],
+)
+
+app.include_router(
+    demo.router,
+    prefix=f"{settings.API_PREFIX}/demo",
+    tags=["DEMO - Complete DIA Workflow Demonstration"],
 )
 
 
