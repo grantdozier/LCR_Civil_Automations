@@ -364,4 +364,37 @@ export const projectsApi = {
   },
 };
 
+// ============================================================================
+// DEMO Module - Complete DIA Workflow Demonstration
+// ============================================================================
+
+export const demoApi = {
+  async setupProject() {
+    return fetchWithError(`${API_BASE_URL}/demo/setup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+  },
+
+  async runDIA(data: {
+    project_id: string;
+    storm_events?: string[];
+    tc_method?: string;
+  }) {
+    return fetchWithError(`${API_BASE_URL}/demo/run-dia`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  },
+
+  async getStatus(runId: string) {
+    return fetchWithError(`${API_BASE_URL}/demo/status/${runId}`);
+  },
+
+  async getInfo() {
+    return fetchWithError(`${API_BASE_URL}/demo/info`);
+  },
+};
+
 export { ApiError };
